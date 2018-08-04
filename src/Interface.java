@@ -4,12 +4,13 @@ import java.awt.Dimension;
 import java.awt.GridLayout;
 
 import javax.swing.BorderFactory;
-
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-
+import javax.swing.JRadioButton;
 import javax.swing.SwingConstants;
 import javax.swing.border.Border;
 
@@ -28,74 +29,87 @@ public class Interface extends JFrame {
 	private JButton six;
 	private JButton seven;
 	private JButton eight;
+	JRadioButton easy = new JRadioButton("Easy");
+	JRadioButton med = new JRadioButton("Medium");
 	JFrame frame = new JFrame("Tic-Tac-Toe");
-
+	Color pinkish=new Color(153,51,204);
 	private void initComponents() {
-
 
 		JLabel TitleLabel = new JLabel("Welcome to Tic-Tac-Toe");
 		TitleLabel.setFont(new java.awt.Font("Tw Cen MT Condensed Extra Bold", 2, 18));
 		TitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-		TitleLabel.setForeground(new java.awt.Color(255, 51, 204));
-		
-		
+		TitleLabel.setForeground(pinkish);
+
+		easy.setSelected(true);
+		easy.addActionListener(e -> setDifficulty("easy"));
+		med.addActionListener(e -> setDifficulty("medium"));
+		ButtonGroup radio = new ButtonGroup();
+		radio.add(easy);
+		radio.add(med);
 		Border raisedbevel = BorderFactory.createRaisedBevelBorder();
 
-		
 		zero = new JButton();
 		zero.setBorder(raisedbevel);
-		zero.setBackground(new Color(51, 153, 255));
+		zero.setBackground(pinkish);
 		zero.addActionListener(e -> setPlayerSelected(zero, 0));
 		one = new JButton();
 		one.setBorder(raisedbevel);
-		one.setBackground(new Color(51, 153, 255));
+		one.setBackground(pinkish);
 		one.addActionListener(e -> setPlayerSelected(one, 1));
 		two = new JButton();
 		two.setBorder(raisedbevel);
-		two.setBackground(new Color(51, 153, 255));
+		two.setBackground(pinkish);
 		two.addActionListener(e -> setPlayerSelected(two, 2));
 		three = new JButton();
 		three.setBorder(raisedbevel);
-		three.setBackground(new Color(51, 153, 255));
+		three.setBackground(pinkish);
 		three.addActionListener(e -> setPlayerSelected(three, 3));
 		four = new JButton();
 		four.setBorder(raisedbevel);
-		four.setBackground(new Color(51, 153, 255));
+		four.setBackground(pinkish);
 		four.addActionListener(e -> setPlayerSelected(four, 4));
 		five = new JButton();
 		five.setBorder(raisedbevel);
-		five.setBackground(new Color(51, 153, 255));
+		five.setBackground(pinkish);
 		five.addActionListener(e -> setPlayerSelected(five, 5));
 		six = new JButton();
 		six.setBorder(raisedbevel);
-		six.setBackground(new Color(51, 153, 255));
+		six.setBackground(pinkish);
 		six.addActionListener(e -> setPlayerSelected(six, 6));
 		seven = new JButton();
 		seven.setBorder(raisedbevel);
-		seven.setBackground(new Color(51, 153, 255));
+		seven.setBackground(pinkish);
 		seven.addActionListener(e -> setPlayerSelected(seven, 7));
 		eight = new JButton();
 		eight.setBorder(raisedbevel);
-		eight.setBackground(new Color(51, 153, 255));
+		eight.setBackground(pinkish);
 		eight.addActionListener(e -> setPlayerSelected(eight, 8));
 
 		frame.setDefaultCloseOperation(EXIT_ON_CLOSE);
-		JPanel contentPane = new JPanel(new GridLayout(4, 1));
+		JPanel contentPane = new JPanel(new GridLayout(3, 1));
 		contentPane.setPreferredSize(new Dimension(350, 400));
-		JPanel TitlePanel = new JPanel(new GridLayout(6, 1));
+		JPanel TitlePanel = new JPanel(new GridLayout(8, 1));
+		JPanel radPanel = new JPanel(new GridLayout(1, 4));
+		radPanel.add(new JLabel());
+		radPanel.add(easy);
+		radPanel.add(med);
+		radPanel.add(new JLabel());
+
 		TitlePanel.add(new JPanel());
 		TitlePanel.add(TitleLabel, BorderLayout.CENTER);
 		TitlePanel.add(new JPanel());
-		TitlePanel.add(new JPanel());
-
-		TitlePanel.add(new JPanel());
-		JLabel instructions = new JLabel("Click on a Box to Play");
+		JLabel diff = new JLabel("Choose your level of difficulty");
+		diff.setFont(new java.awt.Font("Tw Cen MT Condensed ", 1, 14));
+		diff.setHorizontalAlignment(SwingConstants.CENTER);
+		TitlePanel.add(diff);
+		JLabel instructions = new JLabel("& Click on a Box to Play");
 		instructions.setFont(new java.awt.Font("Tw Cen MT Condensed ", 1, 14));
 		instructions.setHorizontalAlignment(SwingConstants.CENTER);
 		TitlePanel.add(instructions);
-
+		TitlePanel.add(new JPanel());
+		TitlePanel.add(radPanel);
+		TitlePanel.add(new JPanel());
 		contentPane.add(TitlePanel);
-		contentPane.add(new JPanel());
 
 		JPanel btnPanel = new JPanel(new GridLayout(3, 3, 5, 5));
 		btnPanel.setBackground(Color.BLACK);
@@ -122,6 +136,10 @@ public class Interface extends JFrame {
 		frame.setLocationRelativeTo(null);
 		frame.setVisible(true);
 
+	}
+
+	private void setDifficulty(String string) {
+		player.setLevel(string);
 	}
 
 	private void changeBtn(String btnName) {
@@ -176,38 +194,44 @@ public class Interface extends JFrame {
 	}
 
 	private void setPlayerInformation(int numberToSign) {
-
-		String btnName = player.setPlayerGrid(numberToSign, frame);
-		if (btnName.equals("Game Over")) {
-		resetGame();
-		}
-		changeBtn(btnName);
-		if (player.checkComp(frame)) {
-			resetGame();
+		if (player.wrongButton(numberToSign)) {
+			JOptionPane.showMessageDialog(frame, "Button already Selected", "Error", JOptionPane.ERROR_MESSAGE);
+		} else {
+			String btnName = player.setPlayerGrid(numberToSign, frame);
+			if (btnName.equals("Game Over")) {
+				resetGame();
+			}
+			changeBtn(btnName);
+			if (player.checkComp(frame)) {
+				resetGame();
+			}
 		}
 		return;
 	}
-
+ 
 	private void resetGame() {
-		player=new PlayerLogic();
+		player = new PlayerLogic();
 		zero.setText("");
-		zero.setBackground(new Color(51, 153, 255));
+		zero.setBackground(pinkish);
 		one.setText("");
-		one.setBackground(new Color(51, 153, 255));
+		one.setBackground(pinkish);
 		two.setText("");
-		two.setBackground(new Color(51, 153, 255));
+		two.setBackground(pinkish);
 		three.setText("");
-		three.setBackground(new Color(51, 153, 255));
+		three.setBackground(pinkish);
 		four.setText("");
-		four.setBackground(new Color(51, 153, 255));
+		four.setBackground(pinkish);
 		five.setText("");
-		five.setBackground(new Color(51, 153, 255));
+		five.setBackground(pinkish);
 		six.setText("");
-		six.setBackground(new Color(51, 153, 255));
+		six.setBackground(pinkish);
 		seven.setText("");
-		seven.setBackground(new Color(51, 153, 255));
+		seven.setBackground(pinkish);
 		eight.setText("");
-		eight.setBackground(new Color(51, 153, 255));
+		eight.setBackground(pinkish);
+		if (med.isSelected()) {
+			player.setLevel("medium");
+		}
 	}
 
 	public static void main(String[] args) {
