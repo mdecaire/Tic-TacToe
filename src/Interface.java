@@ -32,7 +32,8 @@ public class Interface extends JFrame {
 	JRadioButton easy = new JRadioButton("Easy");
 	JRadioButton med = new JRadioButton("Medium");
 	JFrame frame = new JFrame("Tic-Tac-Toe");
-	Color pinkish=new Color(153,51,204);
+	Color pinkish = new Color(153, 51, 204);
+
 	private void initComponents() {
 
 		JLabel TitleLabel = new JLabel("Welcome to Tic-Tac-Toe");
@@ -187,28 +188,29 @@ public class Interface extends JFrame {
 	}
 
 	private void setPlayerSelected(JButton btn, int num) {
-		int numberToSign = num;
+		if (player.wrongButton(num)) {
+			JOptionPane.showMessageDialog(frame, "Button already Selected", "Error", JOptionPane.ERROR_MESSAGE);
+			return;
+		}
 		btn.setText("X");
 		btn.setBackground(Color.white);
-		setPlayerInformation(numberToSign);
+		setPlayerInformation(num);
 	}
 
 	private void setPlayerInformation(int numberToSign) {
-		if (player.wrongButton(numberToSign)) {
-			JOptionPane.showMessageDialog(frame, "Button already Selected", "Error", JOptionPane.ERROR_MESSAGE);
-		} else {
-			String btnName = player.setPlayerGrid(numberToSign, frame);
-			if (btnName.equals("Game Over")) {
-				resetGame();
-			}
-			changeBtn(btnName);
-			if (player.checkComp(frame)) {
-				resetGame();
-			}
+
+		String btnName = player.setPlayerGrid(numberToSign, frame);
+		if (btnName.equals("Game Over")) {
+			resetGame();
+		}
+		changeBtn(btnName);
+		if (player.checkComp(frame)) {
+			resetGame();
 		}
 		return;
+
 	}
- 
+
 	private void resetGame() {
 		player = new PlayerLogic();
 		zero.setText("");

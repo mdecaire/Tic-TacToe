@@ -11,7 +11,7 @@ public class ComputerLogic {
 
 		int num = emptySlots.size();
 		if (num == 0) {
-			if (!isThereAWinner(playerGrid)) {
+			if (!isThereAWinner(playerGrid,'X')||!isThereAWinner(playerGrid,'O')) {
 				JOptionPane.showMessageDialog(frame, "Cat Game! No Winner!", "No Winner", JOptionPane.PLAIN_MESSAGE);
 			}
 			return "Game Over";
@@ -31,9 +31,9 @@ public class ComputerLogic {
 
 	private void playMedium(char[] playerGrid, ArrayList<Integer> emptySlots, int num) {
 
-	if(checkforWin(playerGrid)) {
+	if(checkforWin(playerGrid,'O')) {
 		return;
-	}else if(canBlock(playerGrid)) {
+	}else if(checkforWin(playerGrid,'X')) {
 		return;
 	}else {
 			Random ran = new Random();
@@ -45,34 +45,17 @@ public class ComputerLogic {
 	
 	}
 
-	private boolean canBlock(char[] playerGrid) {
-	boolean blockMove=false;
-	for(int i=0; i<playerGrid.length; i++) {
-		blockMove=false;
-		if(playerGrid[i]==0) {
-			playerGrid[i]='X';
-			blockMove=isThereAWinner(playerGrid);
-			if(blockMove) {
-				playerGrid[i]='O';
-				btnName=Integer.toString(i);
-				break;
-			}else {
-				playerGrid[i]=0;
-			}
-		}
-	}
-	winner=false;
-	return blockMove;
-	}
+	
 
-	private boolean checkforWin(char[] playerGrid) {
+	private boolean checkforWin(char[] playerGrid, char symbol) {
 		boolean winningMove=false;
 		for(int i=0; i<playerGrid.length; i++) {
 			winningMove=false;
 			if(playerGrid[i]==0) {
-				playerGrid[i]='O';
-				winningMove=isThereAWinner(playerGrid);
+				playerGrid[i]=symbol;
+				winningMove=isThereAWinner(playerGrid, symbol);
 				if(winningMove) {
+					playerGrid[i]='O'; //ensures block
 					btnName=Integer.toString(i);
 					break;
 				}else {
@@ -85,172 +68,36 @@ public class ComputerLogic {
 	}
 
 	
-	int playerScore = 0;
-	int compScore = 0;
-
-	public boolean isThereAWinner(char[] playerGrid ) {
-
-		 winner = false;
-
-		for (int i = 0; i < 3; i++) {
-
-			addPlayerScores(playerGrid, i);
-
-		}
-
-		winner = checkStatus();
-		resetScores();
-		if (!winner) {
-
-			for (int i = 3; i <= 5; i++) {
-
-				addPlayerScores(playerGrid, i);
-
+	
+	public boolean isThereAWinner(char[] playerGrid, char symbol ) {
+		winner=true;
+		int[][] winningCombinations= new int[][] {
+			{0,1,2},//first row
+			{3,4,5},//second row
+			{6,7,8},//third row
+			{0,3,6},//first col
+			{1,4,7},//second col
+			{2,5,8},//third col
+			{0,4,8},//left diag
+			{2,4,6}//right diag
+		};
+		for(int i=0; i<8; i++) {
+			winner=true;
+			for(int j=0; j<3; j++) {
+				int index=winningCombinations[i][j];
+				if(playerGrid[index]!=symbol) {
+					winner=false;
+					break;
+				}
 			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
-		if (!winner) {
-
-			for (int i = 6; i <= 8; i++) {
-
-				addPlayerScores(playerGrid, i);
-
+			if(winner==true) {
+				break;
 			}
-
-			winner = checkStatus();
-
-			resetScores();
-
 		}
-
-		if (!winner) {
-
-			for (int i = 0; i <= 8; i += 4) {
-
-				addPlayerScores(playerGrid, i);
-
-			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
-		if (!winner) {
-
-			for (int i = 2; i <= 8; i += 2) {
-
-				addPlayerScores(playerGrid, i);
-
-			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
-		if (!winner) {
-
-			for (int i = 0; i <= 6; i += 3) {
-
-				addPlayerScores(playerGrid, i);
-
-			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
-		if (!winner) {
-
-			for (int i = 1; i <= 7; i += 3) {
-
-				addPlayerScores(playerGrid, i);
-
-			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
-		if (!winner) {
-
-			for (int i = 2; i <= 8; i += 3) {
-
-				addPlayerScores(playerGrid, i);
-
-			}
-
-			winner = checkStatus();
-
-			resetScores();
-
-		}
-
+		
 		return winner;
-
 	}
 
-	private void resetScores() {
+	
 
-		playerScore = 0;
-
-		compScore = 0;
-
-	}
-
-	private void addPlayerScores(char[] playerGrid, int i) {
-
-		int[] magicBoard = new int[] { 8, 1, 6, 3, 5, 7, 4, 9, 2 };
-
-		if (playerGrid[i] == 'X') {
-
-			playerScore += magicBoard[i];
-
-		}
-
-		if (playerGrid[i] == 'O') {
-
-			compScore += magicBoard[i];
-
-		}
-
-	}
-
-	boolean compWins = false;
-	boolean playerWins = false;
-
-	private boolean checkStatus() {
-
-		boolean winner = false;
-
-		if (compScore == 15) {
-
-			winner = true;
-			compWins = true;
-
-		}
-
-		else if (playerScore == 15) {
-
-			winner = true;
-
-			playerWins = true;
-
-		}
-
-		return winner;
-
-	}
 }
