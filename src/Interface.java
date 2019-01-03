@@ -34,6 +34,7 @@ public class Interface extends JFrame {
 	JFrame frame = new JFrame("Tic-Tac-Toe");
 	Color pinkish = new Color(153, 51, 204);
 
+	//initializes the interface
 	private void initComponents() {
 
 		JLabel TitleLabel = new JLabel("Welcome to Tic-Tac-Toe");
@@ -139,10 +140,15 @@ public class Interface extends JFrame {
 
 	}
 
+	//sets the difficulty level of the game
 	private void setDifficulty(String string) {
 		player.setLevel(string);
 	}
 
+	/*
+	 * changes the buttons for the computer
+	 * since the computer has no action events
+	 */
 	private void changeBtn(String btnName) {
 		switch (btnName) {
 		case "0":
@@ -187,6 +193,7 @@ public class Interface extends JFrame {
 
 	}
 
+	//sets the buttons when the player makes a move
 	private void setPlayerSelected(JButton btn, int num) {
 		if (player.wrongButton(num)) {
 			JOptionPane.showMessageDialog(frame, "Button already Selected", "Error", JOptionPane.ERROR_MESSAGE);
@@ -197,6 +204,7 @@ public class Interface extends JFrame {
 		setPlayerInformation(num);
 	}
 
+	//determines if the game is over and resets the board
 	private void setPlayerInformation(int numberToSign) {
 
 		String btnName = player.setPlayerGrid(numberToSign, frame);
@@ -204,6 +212,8 @@ public class Interface extends JFrame {
 			resetGame();
 		}
 		changeBtn(btnName);
+		//computer was checked for winner here...because otherwise the "O" does
+		//not show up before the computer declares itself a winner
 		if (player.checkComp(frame)) {
 			resetGame();
 		}
@@ -211,6 +221,7 @@ public class Interface extends JFrame {
 
 	}
 
+	//code to actually reset the board
 	private void resetGame() {
 		player = new PlayerLogic();
 		zero.setText("");

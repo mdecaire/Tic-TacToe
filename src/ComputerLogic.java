@@ -7,6 +7,14 @@ public class ComputerLogic {
 	String btnName = "";
 	boolean winner=false;
 
+	/**
+	 * Only gets to here if player is not a winner
+	 * @param frame
+	 * @param diff difficulty level
+	 * @param emptySlots how many slots are still available
+	 * @param playerGrid Moves that have already been played
+	 * @return
+	 */
 	public String pickAMove(JFrame frame, String diff, ArrayList<Integer> emptySlots, char[] playerGrid) {
 
 		int num = emptySlots.size();
@@ -16,10 +24,10 @@ public class ComputerLogic {
 			}
 			return "Game Over";
 		}
-		if (diff.equals("medium")) {
+		if (diff.equals("medium")) { //goes to medium level
 			playMedium(playerGrid, emptySlots, num);
 
-		} else {
+		} else {//easy level...just randomly selects the next move on the board
 			Random ran = new Random();
 			int slotNumber = ran.nextInt(num);
 			int index = (int) emptySlots.get(slotNumber);
@@ -29,13 +37,20 @@ public class ComputerLogic {
 		return btnName;
 	}
 
+	/**
+	 * initializes the medium level...which checks to see if 
+	 * player or computer has a winning move
+	 * @param playerGrid
+	 * @param emptySlots
+	 * @param num
+	 */
 	private void playMedium(char[] playerGrid, ArrayList<Integer> emptySlots, int num) {
 
-	if(checkforWin(playerGrid,'O')) {
+	if(isNextMoveTheWinningMove(playerGrid,'O')) {//checks to see if it has a winning move
 		return;
-	}else if(checkforWin(playerGrid,'X')) {
+	}else if(isNextMoveTheWinningMove(playerGrid,'X')) {//checks to see if player has a winning move
 		return;
-	}else {
+	}else {//randomly selects a next move if there are no apparent winning moves
 			Random ran = new Random();
 			int slotNumber = ran.nextInt(num);
 			int index = (int) emptySlots.get(slotNumber);
@@ -45,9 +60,16 @@ public class ComputerLogic {
 	
 	}
 
-	
-
-	private boolean checkforWin(char[] playerGrid, char symbol) {
+	/**
+	 * this method iterates through the player grid to 
+	 * see if there are any moves that will be winning moves.
+	 * It does this by filling in hypothetical plays
+	 * to see if they are winners
+	 * @param playerGrid
+	 * @param symbol
+	 * @return
+	 */
+	private boolean isNextMoveTheWinningMove(char[] playerGrid, char symbol) {
 		boolean winningMove=false;
 		for(int i=0; i<playerGrid.length; i++) {
 			winningMove=false;
@@ -55,7 +77,7 @@ public class ComputerLogic {
 				playerGrid[i]=symbol;
 				winningMove=isThereAWinner(playerGrid, symbol);
 				if(winningMove) {
-					playerGrid[i]='O'; //ensures block
+					playerGrid[i]='O'; //ensures that computer blocks player moves or takes it's own move
 					btnName=Integer.toString(i);
 					break;
 				}else {
@@ -63,14 +85,19 @@ public class ComputerLogic {
 				}
 			}
 		}
-		winner=false;
+		winner=false;//makes sure that winner is not set prematurely from hypothetical moves
 		return winningMove;
 	}
 
 	
-	
+	/**
+	 * iterates through comparing the player grid  to the winning combinations
+	 * to see if there is a winner so far
+	 * @param playerGrid is the list of all the moves made so far
+	 * @param symbol is either X for player or O for computer
+	 * @return boolean if there is a winner
+	 */
 	public boolean isThereAWinner(char[] playerGrid, char symbol ) {
-		winner=true;
 		int[][] winningCombinations= new int[][] {
 			{0,1,2},//first row
 			{3,4,5},//second row
@@ -87,10 +114,10 @@ public class ComputerLogic {
 				int index=winningCombinations[i][j];
 				if(playerGrid[index]!=symbol) {
 					winner=false;
-					break;
+					break;//breaks out of inner loop if no winner in this row
 				}
 			}
-			if(winner==true) {
+			if(winner==true) {//breaks out of outer loop if there is a winner
 				break;
 			}
 		}
