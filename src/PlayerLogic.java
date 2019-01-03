@@ -1,5 +1,6 @@
 import java.util.ArrayList;
 
+import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
@@ -65,8 +66,12 @@ public class PlayerLogic {
 	}
 
 	private void showWinnerDialog(String string, JFrame frame) {
-		JOptionPane.showMessageDialog(frame, string + " win!", "Winner", JOptionPane.PLAIN_MESSAGE);
-
+		ImageIcon icon = new ImageIcon("image/award.jpg");
+		JOptionPane.showMessageDialog(frame,
+			    string+" win! ",
+			    "Winner",
+			    JOptionPane.INFORMATION_MESSAGE,
+			    icon);
 	}
 
 	//makes sure player is not selecting an already chosen grid
